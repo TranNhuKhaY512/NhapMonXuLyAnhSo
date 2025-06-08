@@ -7,7 +7,6 @@ import scipy
 import numpy as np
 import imageio.v2 as iio
 import matplotlib.pylab as plt
-
 ```
 ### Trong bài này sử dụng các thư viện như: PIL và imageio dùng để đọc và xử lý ảnh cơ bản, Numpy hỗ trợ các thao tác trên ma trận ảnh . Matplotlib dùng để hiển thị ảnh, Scipy (fftpack) thực hiện biến đổi Fourier, còn os và math hỗ trợ quản lý file và các phép toán học cơ bản.
 ## Thuật toán sử dụng
@@ -167,7 +166,7 @@ def menu():
     print("\tL. Log Transformation")
     print("\tH. Histogram Equalization")
     print("\tC. Contrast Stretching")
-    print("\t0. Thoát")
+    print("\tE. Thoát")
 
     luachon = input("Nhập lựa chọn của bạn: ").upper()
     match luachon:
@@ -181,19 +180,10 @@ def menu():
             apply_transformation(Histogram_equalization, "Histogram_Eq")
         case 'C':
             apply_transformation(Contrast_Stretching, "Contrast")
-        case '0':
+        case 'E':
             print("Tạm biệt!")
         case _:
             print("Lựa chọn không hợp lệ!")
 
 menu()
 ```
-
-
-
-
-
-
-
-
-
