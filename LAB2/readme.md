@@ -23,7 +23,7 @@ import matplotlib.pylab as plt
 im_2 = 255 - im_1
 ```
 1.2 Thay đổi chất lượng ảnh với Power law (Gamma-Correction): Dùng để tăng chất lượng của ảnh, làm sáng các vùng tối (với γ < 1) hoặc làm tối các vùng sáng (với γ < 1).
--Có công thức là s = c * r^γ. Trong đó, giá trị pixel mới (s), giá trị gamma (γ), giá trị pixel hiện tại (r) và một hằng số c. Trong bài này,thực hiện bằng cách chuẩn hóa giá trị pixel về [0,1], áp dụng phép biến đổi rồi chuyển về thang [0,255].
+- Có công thức là s = c * r^γ. Trong đó, giá trị pixel mới (s), giá trị gamma (γ), giá trị pixel hiện tại (r) và một hằng số c. Trong bài này,thực hiện bằng cách chuẩn hóa giá trị pixel về [0,1], áp dụng phép biến đổi rồi chuyển về thang [0,255].
 ```python
 b1 = im_1.astype(float)
 #tìm giá trị lớn nhất trong b1
@@ -159,7 +159,7 @@ fig, axes = plt.subplots(1, len(processed_images), figsize=(15, 5))
     plt.suptitle(f"Kết quả: {method_name}")
     plt.show()
 ```
-- Tạo menu cho người dùng bằng match-case (gọn gàng, dễ đọc, dễ mở rộng hơn): cho phép người dùng chọn phương pháp biến đổi ảnh. 
+- Tạo menu cho người dùng bằng match-case (gọn gàng, dễ đọc, dễ mở rộng hơn): cho phép người dùng chọn phương pháp biến đổi ảnh. Chương trình gọi đúng hàm tương ứng khi người dùng nhập 1 chữ cái.
 ```python
 def menu():
     print("=== ỨNG DỤNG BIẾN ĐỔI ẢNH ===")
