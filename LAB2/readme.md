@@ -25,14 +25,13 @@ im_2 = 255 - im_1
 1.2 Thay đổi chất lượng ảnh với Power law (Gamma-Correction): Dùng để tăng chất lượng của ảnh, làm sáng các vùng tối (với γ < 1) hoặc làm tối các vùng sáng (với γ < 1).
 - Có công thức là s = c * r^γ. Trong đó, giá trị pixel mới (s), giá trị gamma (γ), giá trị pixel hiện tại (r) và một hằng số c. Trong bài này,thực hiện bằng cách chuẩn hóa giá trị pixel về [0,1], áp dụng phép biến đổi rồi chuyển về thang [0,255].
 ```python
-b1 = im_1.astype(float)
 #tìm giá trị lớn nhất trong b1
 b2=np.max(b1)
 #chuẩn hóa b1 (tức là chuyển các giá trị b1 vê thuộc khoảng [0,1])
 b3 = (b1+1)/b2
-#tính tương qun hàm mũ gama
+#tính tương qun hàm mũ gamma
 b2 = np.log(b3)*gamma
-#tính tương quan gama và quy về khoảng [0,1]
+#tính tương quan gamma và quy về khoảng [0,1]
 c= np.exp (b2) * 255.0
 ```
 1.3 Thay đổi cường độ điểm ảnh với Log Transformation: dùng để làm nổi bật các chi tiết trong vùng tối và giảm chói vùng sáng. 
