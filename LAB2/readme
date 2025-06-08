@@ -1,5 +1,5 @@
 ## Các công nghệ được sử dụng
-`bash
+`python
 from PIL import Image
 import math
 import scipy
