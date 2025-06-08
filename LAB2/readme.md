@@ -14,9 +14,10 @@ import matplotlib.pylab as plt
 ### Trong bài này có 2 thuật toán chính đầu tiên là Point Processing gồm phần nhỏ là :Image inverse transformation, Gamma-Correction, Log Transformation, Histogram equalization, Contrast Stretching và thuật toán thứ 2 là Biến đổi ảnh theo miền tần suất (Fourier) gồm 3 phần nhỏ là:  Fast Fourier, Butterworth Lowpass Filter, Butterworth Highpass Filter
 ### Giải thích cách hoạt động:
 #### Point Processing: thuật toán này dùng để xử lý ảnh bằng cách thay đổi giá trị của từng pixel , dựa trên giá trị cường độ ban đầu của nó.
-- Biến đổi cường độ ảnh (Image inverse transformation): Là phép biến đổi đảo ngược mức sáng của ảnh từ vùng sáng sang vùng tối và ngược lại từ vùng tối sang vùng sáng.
-
+##### Biến đổi cường độ ảnh (Image inverse transformation): Là phép biến đổi đảo ngược mức sáng của ảnh từ vùng sáng sang vùng tối và ngược lại từ vùng tối sang vùng sáng.
+- Có công thức là giá trị pixel mới (s) = giá trị cường độ tối đa (L-1) - giá trị pixel hiện tại (r). Trong bài này, s được gán là im_2, L=256 và r là im_1.
 ```python
 im_2 = 255 - im_1
 ```
+
 
