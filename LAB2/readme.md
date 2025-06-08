@@ -11,7 +11,9 @@ import matplotlib.pylab as plt
 ```
 ### Trong bài này sử dụng các thư viện như: PIL và imageio dùng để đọc và xử lý ảnh cơ bản, Numpy hỗ trợ các thao tác trên ma trận ảnh . Matplotlib dùng để hiển thị ảnh, Scipy (fftpack) thực hiện biến đổi Fourier, còn os và math hỗ trợ quản lý file và các phép toán học cơ bản.
 ## Thuật toán sử dụng
-### Trong bài này có 2 thuật toán chính đầu tiên là Point Processing gồm phần nhỏ là :Image inverse transformation, Gamma-Correction, Log Transformation, Histogram equalization, Contrast Stretching và thuật toán thứ 2 là Biến đổi ảnh theo miền tần suất (Fourier) gồm 2 phần là: Biến đổi ảnh với Fast Fourier và lọc ảnh trong miền tần suất có 2 cái nhỏ là: Butterworth Lowpass Filter, Butterworth Highpass Filter
+### Trong bài này có 2 thuật toán chính :
+- Point Processing gồm phần nhỏ là :Image inverse transformation, Gamma-Correction, Log Transformation, Histogram equalization, Contrast Stretching.
+- Biến đổi ảnh theo miền tần suất (Fourier) gồm 2 phần là: Biến đổi ảnh với Fast Fourier và lọc ảnh trong miền tần suất có 2 cái nhỏ là: Butterworth Lowpass Filter, Butterworth Highpass Filter.
 ## Giải thích cách hoạt động:
 #### 1. Point Processing: thuật toán này dùng để xử lý ảnh bằng cách thay đổi giá trị của từng pixel , dựa trên giá trị cường độ ban đầu của nó.
  1.1 Biến đổi cường độ ảnh (Image inverse transformation): Là phép biến đổi đảo ngược mức sáng của ảnh từ vùng sáng sang vùng tối và ngược lại từ vùng tối sang vùng sáng. 
