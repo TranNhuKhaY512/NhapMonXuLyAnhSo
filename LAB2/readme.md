@@ -51,7 +51,7 @@ num_cdf_m = (cdf_m - cdf_m.min()) * 255
 den_cdf_m = (cdf.max () - cdf_m.min ())
 cdf_m = num_cdf_m/den_cdf_m
 ```
-1.5 Thay đổi ảnh với Contrast Stretching: dùng để tăng độ tương phản tương tự Histogram Equalization nhưng bằng cách kéo dãn dải giá trị pixel (thay đổi giấ tri pixel) thay vì dùng xác suất, CDF để tính. Công thức s = (r - r_min) * (255 / (r_max - r_min)), trong bài này a là min và b là max.
+1.5 Thay đổi ảnh với Contrast Stretching: dùng để tăng độ tương phản tương tự Histogram Equalization nhưng bằng cách kéo dãn dãy giá trị pixel (thay đổi giá tri pixel) thay vì dùng xác suất, CDF để tính. Công thức s = (r - r_min) * (255 / (r_max - r_min)), trong bài này a là min và b là max.
 ```python
 #công thức biến đổi giãn độ tương phản
 im2 = 255* (c- a)/(b - a)
@@ -76,7 +76,7 @@ d= scipy.fftpack.fftshift (c)
 ```
 ### Phần bài tập:
 #### Sử dụng thuật toán Point Processing để viết chương trình cho phép người dùng chọn phương pháp biến đổi ảnh sau:
-- Image inverse transformation:dùng biến đổi đảo ngược mức sáng của ảnh từ vùng sáng sang vùng tối và ngược lại. Mỗi pixel sẽ bị 255 trừ ra để đổi ngược màu (sáng thành tối và ngược lại)
+- Image inverse transformation:dùng biến đổi đảo ngược mức sáng của ảnh từ vùng sáng sang vùng tối và ngược lại. Trong bài, mỗi pixel sẽ bị 255 trừ ra để đổi ngược màu (sáng thành tối và ngược lại)
 ```python
 #công thức tính Image inverse transformation
 def Image_inverse_transformation(im_1):
@@ -110,7 +110,7 @@ def Histogram_equalization(im_1):
     equalized = cdf[flat]
     return np.reshape(equalized, im_1.shape)
 ```
-- Contrast Stretching: dùng để kéo giãn độ sáng giữa các pixel để nhìn rõ hơn bằng cách tìm giá trị sáng và tối nhất trong ảnh đó và dùng công thức kéo giãn khoảng sáng để ảnh rõ hơn.
+- Contrast Stretching: dùng để kéo dãn độ sáng giữa các pixel để nhìn rõ hơn bằng cách tìm giá trị sáng và tối nhất trong ảnh đó và dùng công thức kéo dãn khoảng sáng để ảnh rõ hơn.
 ```python
 def Contrast_Stretching(im_1):
     a = im_1.min()
@@ -157,7 +157,7 @@ fig, axes = plt.subplots(1, len(processed_images), figsize=(15, 5))
     plt.suptitle(f"Kết quả: {method_name}")
     plt.show()
 ```
-- Tạo menu cho người dùng bằng match-case (gọn gàng, dễ đọc, dễ mở rộng hơn): cho phép người dùng chọn phương pháp biến đổi ảnh. Chương trình gọi đúng hàm tương ứng khi người dùng nhập 1 chữ cái.
+- Tạo menu cho người dùng bằng match-case (gọn gàng, dễ đọc, dễ mở rộng hơn): cho phép người dùng chọn phương pháp biến đổi ảnh. Khi người dùng nhập 1 chữ cái, chương trình gọi đúng hàm tương ứng .
 ```python
 def menu():
     print("=== ỨNG DỤNG BIẾN ĐỔI ẢNH ===")
