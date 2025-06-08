@@ -1,1 +1,10 @@
+## Các công nghệ được sử dụng
+```python
+from PIL import Image
+import math
+import scipy
+import numpy as np
+import imageio.v2 as iio
+import matplotlib.pylab as plt
+```
 
