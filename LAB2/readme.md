@@ -145,7 +145,7 @@ processed_img = Image.fromarray(processed_np)
 output_path = os.path.join(output_folder, f"{os.path.splitext(file_name)[0]}_{method_name}.png")
 processed_img.save(output_path)
 ```
--Hiển thị ảnh sau xử lý
+- Hiển thị ảnh sau xử lý
 ```python
 fig, axes = plt.subplots(1, len(processed_images), figsize=(15, 5))
     if len(processed_images) == 1:
