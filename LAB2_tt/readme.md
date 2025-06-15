@@ -16,7 +16,7 @@ from scipy.ndimage import minimum_filter, maximum_filter # thêm vào ở bài 4
 - Point Processing gồm phần nhỏ là :Image inverse transformation, Gamma-Correction, Log Transformation, Histogram equalization, Contrast Stretching.
 - Biến đổi ảnh theo miền tần suất (Fourier) gồm 2 phần là: Biến đổi ảnh với Fast Fourier và lọc ảnh trong miền tần suất có 2 cái nhỏ là: Butterworth Lowpass Filter, Butterworth Highpass Filter.
 ## Giải thích cách hoạt động:
-### Bài tập 2: Viết chương trình tạo menu cho phép người dùng chọn các phương pháp biến đổi ảnh như sau:
+## Bài tập 2: Viết chương trình tạo menu cho phép người dùng chọn các phương pháp biến đổi ảnh như sau:
 #### Sử dụng thuật toán biến đổi ảnh theo miền tần suất (Fourier) gồm :  Fast Fourier, Butterworth Lowpass Filter, Butterworth Highpass Filter
 - Với phương pháp Fast Fourier: sử dụng thuật toán fft2 để phân tích ảnh và dùng fftshift để dịch tâm tần số về giữa ảnh. Trong bài này, dùng fftshift để dịch tâm tần số về giữa, chuẩn hóa về thang [0,255]
 - Định nghĩa hàm Fast_Fourier() 
