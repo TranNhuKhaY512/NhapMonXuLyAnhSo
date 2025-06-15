@@ -95,6 +95,9 @@ def Butterworth_Highpass_Filter(im_1):
     e = (e - np.min(e)) / (np.max(e) - np.min(e)) * 255
     return e.astype(np.uint8)
 ```
+- Output của phép biến đổi này:
+![image](https://github.com/user-attachments/assets/6c466be8-0fff-4aca-8bf8-429e65c4199a)
+
 
 
 
