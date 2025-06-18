@@ -219,7 +219,7 @@ def Contrast_Stretching(im_1):
     stretched = 255.0 * (im_1 - a) / (b - a)
     return np.clip(stretched, 0, 255).astype(np.uint8)
 ```
-#### Tạo hàm thực thi và hiển thị ảnh
+###Tạo hàm thực thi và hiển thị ảnh
 1. Tạo danh sách chứa tên các phép biến đổi và hàm tương ứng,  
  ```python
  # Danh sách hàm xử lý xám
