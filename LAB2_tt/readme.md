@@ -98,7 +98,138 @@ def Butterworth_Highpass_Filter(im_1):
 - Output của phép biến đổi này:
 ![image](https://github.com/user-attachments/assets/6c466be8-0fff-4aca-8bf8-429e65c4199a)
 
+#### Tạo hàm thực thi và hiển thị ảnh
+- Tạo thư mục ảnh đầu vào, đầu ra :
+```python
+def apply_transformation(transformation_func, method_name):
+    input_folder = "exercise"
+    output_folder = "output_2"
+    os.makedirs(output_folder, exist_ok=True)
+```
 
+- Lấy 3 ảnh trong thư mục đầu vào, mở và chuyển ảnh sang đen trắng và chuyển thành mảng
+```python
+# Lọc ra 3 file ảnh đầu tiên có đuôi png/jpg/jpeg trong thư mục "exercise"
+    image_files = [f for f in os.listdir(input_folder) if f.lower().endswith((".png", ".jpg", ".jpeg"))][:3]
+    processed_images = []
+# Áp dụng biến đổi
+    for file_name in image_files:
+        img_path = os.path.join(input_folder, file_name)
+        img = Image.open(img_path).convert("L")
+        im_np = np.asarray(img)
+# Gọi hàm biến đổi ảnh
+        processed_np = transformation_func(im_np)
+        processed_img = Image.fromarray(processed_np)
+```
+- Lưu ảnh
+```python
+# lưu ảnh
+        output_path = os.path.join(output_folder, f"{os.path.splitext(file_name)[0]}_{method_name}.png")
+        processed_img.save(output_path)
+```
+- Hiển thị ảnh sau xử lý
+```python
+ # Hiển thị ảnh
+    fig, axes = plt.subplots(1, len(processed_images), figsize=(15, 5))
+ # Trường hợp chỉ có 1 ảnh, ép axes thành list để duyệt được
+    if len(processed_images) == 1:
+        axes = [axes]
+    for ax, (image, fname) in zip(axes, processed_images):
+        ax.imshow(image, cmap='gray')
+        ax.set_title(fname)
+        ax.axis('off')
+    plt.suptitle(f"Kết quả: {method_name}")
+    plt.show()
+
+```
+- Tạo menu cho người dùng : cho phép người dùng chọn phương pháp biến đổi ảnh. Khi người dùng nhập 1 chữ cái (F,L,H) chương trình gọi đúng hàm tương ứng .
+```python
+def menu():
+    while True:
+        print("=== ỨNG DỤNG BIẾN ĐỔI ẢNH ===")
+        print("\tF. Fast Fourier")
+        print("\tL. Butterworth Lowpass Filter")
+        print("\tH. Butterworth Highpass Filter")
+        print("\tE. Thoát")
+
+        luachon = input("Nhập lựa chọn của bạn: ").upper()
+        match luachon:
+            case 'F':
+                apply_transformation(Fast_Fourier, "Fast")
+            case 'L':
+                apply_transformation(Butterworth_Lowpass_Filter, "Lowpass")
+            case 'H':
+                apply_transformation(Butterworth_Highpass_Filter, "Highpass")
+            case 'E':
+                print("Tạm biệt!")
+                break
+            case _:
+                print("Lựa chọn không hợp lệ!")
+
+menu()
+```
+## Bài tập 3: Viết chương trình thay đổi thứ tự màu RGB của ảnh trong thư mục exercise và sử dụng ngẫu nhiên một trong các phép biến đổi ảnh trong câu 1. Lưu và hiển thị ảnh đã biến đổi.
+#### Trong bài nay sử dụng các thuật toán biến đổi ảnh trong câu 1 bao gồm Image inverse transformation, Gamma-Correction, Log Transformation, Histogram equalization, Contrast Stretching.
+1. Phép biến đổi cường độ ảnh còn được gọi là Image inverse transformation : Trong bài, mỗi pixel sẽ bị 255 trừ ra để đổi ngược màu (sáng thành tối và ngược lại)
+- Định nghĩa hàm  Image inverse transformation()
+```python
+def Image_inverse_transformation(im_1):
+    return 255 - im_1
+```
+2. Phương pháp thay đổi chất lượng ảnh với Power Law ( Gamma-Correction): Trong bài này, dùng chuẩn hóa pixel về [0,1] áp dụng công thức gamma làm tăng độ sáng và chuyển về thang [0,255].
+- Định nghĩa hàm  Gamma-Correction()
+```python
+def Gamma_Correction(im_1, gamma=0.5):
+    im_1 = np.asarray(im_1, dtype=np.float32) / 255.0
+    corrected = np.power(im_1, gamma)
+    return np.clip(corrected * 255, 0, 255).astype(np.uint8)
+```
+3. Phương pháp thay đổi cường độ ảnh với log transformation: trong bài này chia cho log(1+b2) để chuẩn hóa kết quả.
+- Định nghĩa hàm  Log_Transformation()
+```python
+def Log_Transformation(im_1):
+    b1 = im_1.astype(np.float32)
+    b2 = np.max(b1)
+    if b2 == 0:
+        return np.zeros_like(im_1, dtype=np.uint8)
+    c = (128.0 * np.log(1 + b1)) / np.log(1 + b2)
+    return np.clip(c, 0, 255).astype(np.uint8)
+```
+4.Histogram equalization: trong bài dùng để tạo ảnh mới rõ nét với độ sáng cân bằng bằng cách chuẩn hóa histogram bằng hàm tích lũy CDF.
+- Định nghĩa hàm Histogram_equalization()
+```python
+def Histogram_equalization(im_1):
+    flat = im_1.flatten()
+    hist, _ = np.histogram(flat, 256, [0, 256])
+    cdf = hist.cumsum()
+    cdf_m = np.ma.masked_equal(cdf, 0)
+    cdf_m = (cdf_m - cdf_m.min()) * 255 / (cdf_m.max() - cdf_m.min())
+    cdf = np.ma.filled(cdf_m, 0).astype('uint8')
+    equalized = cdf[flat]
+    return np.reshape(equalized, im_1.shape)
+```
+5. Thay đổi ảnh với Contrast Stretching: dùng công thức kéo dãn khoảng sáng để ảnh rõ hơn.
+- Định nghĩa hàm Contrast Stretching()
+```python
+def Contrast_Stretching(im_1):
+    a = np.min(im_1)
+    b = np.max(im_1)
+    if a == b:
+        return np.zeros_like(im_1, dtype=np.uint8)
+    stretched = 255.0 * (im_1 - a) / (b - a)
+    return np.clip(stretched, 0, 255).astype(np.uint8)
+```
+-
+ ```python
+ # Danh sách hàm xử lý xám
+gray_transforms = [
+    ("Negative", Image_inverse_transformation),
+    ("Log", Log_Transformation),
+    ("Gamma", lambda img: Gamma_Correction(img, gamma=0.5)), #gán gamma = 0.5
+    ("Histogram", Histogram_equalization),
+    ("Stretch", Contrast_Stretching)
+]
+```
 
 
 
