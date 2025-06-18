@@ -18,7 +18,7 @@ from scipy.ndimage import minimum_filter, maximum_filter # thêm vào ở bài 4
 ## Giải thích cách hoạt động:
 ## Bài tập 2: Viết chương trình tạo menu cho phép người dùng chọn các phương pháp biến đổi ảnh như sau:
 #### Sử dụng thuật toán biến đổi ảnh theo miền tần suất (Fourier) gồm :  Fast Fourier, Butterworth Lowpass Filter, Butterworth Highpass Filter
-- Với phương pháp Fast Fourier: sử dụng thuật toán fft2 để phân tích ảnh và dùng fftshift để dịch tâm tần số về giữa ảnh. Trong bài này, dùng fftshift để dịch tâm tần số về giữa, chuẩn hóa về thang [0,255]
+1. Với phương pháp Fast Fourier: sử dụng thuật toán fft2 để phân tích ảnh và dùng fftshift để dịch tâm tần số về giữa ảnh. Trong bài này, dùng fftshift để dịch tâm tần số về giữa, chuẩn hóa về thang [0,255]
 - Định nghĩa hàm Fast_Fourier() 
 ```python
  def Fast_Fourier(im_1):
@@ -32,7 +32,7 @@ from scipy.ndimage import minimum_filter, maximum_filter # thêm vào ở bài 4
 - Output của phép biến đổi này:
  ![image](https://github.com/user-attachments/assets/c5d9e657-f360-467c-b742-27abd95e60ca)
 
-- Với phương pháp Butterworth Lowpass Filter:  sử dụng những điểm ảnh có tần suất thấp từ biến đổi Fourier có khả năng làm mịn ảnh và khử nhiễu. Trong bài này, áp dụng fft2 để phân tích ảnh, fftshift để dịch tâm tần số về giữa, sử dụng công thức H[i, j] = 1 / (1 + (r / d_0) ** (2 * t1)) để giữ những điểm có tần suất thấp. 
+2. Với phương pháp Butterworth Lowpass Filter:  sử dụng những điểm ảnh có tần suất thấp từ biến đổi Fourier có khả năng làm mịn ảnh và khử nhiễu. Trong bài này, áp dụng fft2 để phân tích ảnh, fftshift để dịch tâm tần số về giữa, sử dụng công thức H[i, j] = 1 / (1 + (r / d_0) ** (2 * t1)) để giữ những điểm có tần suất thấp. 
 - Định nghĩa hàm  Butterworth_Lowpass_Filter()
 ```python 
 def Butterworth_Lowpass_Filter(im_1):
@@ -64,7 +64,7 @@ def Butterworth_Lowpass_Filter(im_1):
 - Output của phép biến đổi này:
 ![image](https://github.com/user-attachments/assets/647fc6ef-3ec5-4b20-a51b-881102a3b208)
 
-- Với phương pháp Butterworth Highpass Filter:  sử dụng những điểm ảnh có tần suất cao từ biến đổi Fourier để làm sắc biên của ảnh.
+3. Với phương pháp Butterworth Highpass Filter:  sử dụng những điểm ảnh có tần suất cao từ biến đổi Fourier để làm sắc biên của ảnh.
 - Định nghĩa hàm Butterworth Highpass Filter()
 ```python
 def Butterworth_Highpass_Filter(im_1):
@@ -99,9 +99,13 @@ def Butterworth_Highpass_Filter(im_1):
 ![image](https://github.com/user-attachments/assets/6c466be8-0fff-4aca-8bf8-429e65c4199a)
 
 #### Tạo hàm thực thi và hiển thị ảnh
+1. Main code:
+```python
+def apply_transformation():
+```
 - Tạo thư mục ảnh đầu vào, đầu ra :
 ```python
-def apply_transformation(transformation_func, method_name):
+
     input_folder = "exercise"
     output_folder = "output_2"
     os.makedirs(output_folder, exist_ok=True)
@@ -195,7 +199,7 @@ def Log_Transformation(im_1):
     c = (128.0 * np.log(1 + b1)) / np.log(1 + b2)
     return np.clip(c, 0, 255).astype(np.uint8)
 ```
-4.Histogram equalization: trong bài dùng để tạo ảnh mới rõ nét với độ sáng cân bằng bằng cách chuẩn hóa histogram bằng hàm tích lũy CDF.
+4. Histogram equalization: trong bài dùng để tạo ảnh mới rõ nét với độ sáng cân bằng bằng cách chuẩn hóa histogram bằng hàm tích lũy CDF.
 - Định nghĩa hàm Histogram_equalization()
 ```python
 def Histogram_equalization(im_1):
@@ -219,7 +223,7 @@ def Contrast_Stretching(im_1):
     stretched = 255.0 * (im_1 - a) / (b - a)
     return np.clip(stretched, 0, 255).astype(np.uint8)
 ```
-###Tạo hàm thực thi và hiển thị ảnh
+### Tạo hàm thực thi và hiển thị ảnh
 1. Tạo danh sách chứa tên các phép biến đổi và hàm tương ứng,  
  ```python
  # Danh sách hàm xử lý xám
@@ -360,13 +364,13 @@ filters = [
     ("Highpass", butter_highpass)
 ]
 ```
-2. Main code
-- Thư mục ảnh đầu vào , đầu ra
+2. Thư mục ảnh đầu vào , đầu ra
 ```python
 folder = 'exercise'
 output = 'output_4'
 os.makedirs(output, exist_ok=True)
 ```
+3. Main code
 - Lấy 3 ảnh trong thư mục đầu vào, mở và chuyển sang RGB
 ```python
 def process_images():
