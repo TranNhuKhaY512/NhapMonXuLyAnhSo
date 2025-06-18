@@ -356,7 +356,8 @@ def butter_highpass(img, D0=30):
     return Image.fromarray(maximum_filter(out, size=3))
 ```
 #### Tạo hàm thực thi và hiển thị ảnh
-1. Tạo danh sách chứa tên các phương pháp và hà tương ứng
+1. Main code
+- Tạo danh sách chứa tên các phương pháp và hàm tương ứng
 ```python
 filters = [
     ("Fourier", fast_fourier),
@@ -364,13 +365,13 @@ filters = [
     ("Highpass", butter_highpass)
 ]
 ```
-2. Thư mục ảnh đầu vào , đầu ra
+- Thư mục ảnh đầu vào , đầu ra
 ```python
 folder = 'exercise'
 output = 'output_4'
 os.makedirs(output, exist_ok=True)
 ```
-3. Main code
+
 - Lấy 3 ảnh trong thư mục đầu vào, mở và chuyển sang RGB
 ```python
 def process_images():
