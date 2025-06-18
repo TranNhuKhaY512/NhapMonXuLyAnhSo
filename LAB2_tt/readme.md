@@ -219,7 +219,8 @@ def Contrast_Stretching(im_1):
     stretched = 255.0 * (im_1 - a) / (b - a)
     return np.clip(stretched, 0, 255).astype(np.uint8)
 ```
--
+#### Tạo hàm thực thi và hiển thị ảnh
+1. Tạo danh sách chứa tên các phép biến đổi và hàm tương ứng,  
  ```python
  # Danh sách hàm xử lý xám
 gray_transforms = [
@@ -230,6 +231,181 @@ gray_transforms = [
     ("Stretch", Contrast_Stretching)
 ]
 ```
+2. Đảo thứ tự màu RGB ngẫu nhiên nhờ random.shuffle()
+- Định nghĩa hàm đảo shuffle_rgb()
+```python
+# ===== Hàm đổi thứ tự màu RGB =====
+def shuffle_rgb(img_rgb):
+    img_np = np.array(img_rgb)
+    channels = [0, 1, 2] # chỉ số của kênh R, G, B
+    random.shuffle(channels)  # trộn ngẫu nhiên thứ tự
+    shuffled = img_np[:, :, channels]
+    return Image.fromarray(shuffled), channels
+```
+3. Main code:
+```python
+def random_color_and_gray_transform():
+```
+- Tạo thư mục ảnh đầu vào, đầu ra :
+```python
+    input_folder = "exercise"  #
+    output_folder = "output_3"
+    os.makedirs(output_folder, exist_ok=True)
+```
+- Lấy 3 ảnh trong thư mục đầu vào, mở và chuyển sang RGB.
+```python
+    image_files = [f for f in os.listdir(input_folder) if f.lower().endswith((".png", ".jpg", ".jpeg"))]
+    if not image_files:
+        print("Không tìm thấy ảnh trong thư mục 'exercise'")
+        return
+    for file_name in image_files:
+        img_path = os.path.join(input_folder, file_name)
+        img = Image.open(img_path).convert("RGB")
+```
+- Đổi thứ tự màu RGB và chuyển sang ảnh xám
+```python
+        # đổi thứ tự RGB ngẫu nhiên
+        shuffled_img, channel_order = shuffle_rgb(img)
+
+        # chuyển sang ảnh xám để xử lý
+        gray_img = shuffled_img.convert("L")
+        gray_np = np.asarray(gray_img)
+
+        # chọn biến đổi ảnh xám ngẫu nhiên
+        method_name, method_func = random.choice(gray_transforms)
+        transformed = method_func(gray_np)
+```
+- Lưu ảnh
+```python
+        #  lưu ảnh
+        output_img = Image.fromarray(transformed)
+        output_path = os.path.join(output_folder, f"{os.path.splitext(file_name)[0]}_RGB{channel_order}_{method_name}.png")
+        output_img.save(output_path)
+```
+- Hiển thị kết quả
+```python
+        # Hiển thị
+        plt.imshow(output_img, cmap='gray')
+        plt.title(f"{file_name} - RGB{channel_order} - {method_name}")
+        plt.axis('off')
+        plt.show()
+#gọi hàm chính xử lý
+random_color_and_gray_transform()
+```
+## Bài tập 4. Viết chương trình thay đổi thứ tự màu RGB của ảnh trong thư mục exercise và sử dụng ngẫu nhiên một trong các phép biến đổi ảnh trong câu 2. Nếu ngẫu nhiên là phép Butterworth Lowpass thì chọn thêm Min Filter để lọc ảnh. Nếu ngẫu nhiên là phép Butterworth Highpass thì chọn thêm Max Filter để lọc ảnh. Lưu và hiển thị ảnh đã biến đổi.
+#### Trong bài nay sử dụng các thuật toán biến đổi ảnh trong câu 2 bao gồm Fast Fourier, Butterworth Lowpass Filter, Butterworth Highpass Filter.
+1. Phép biến đổi Fast Fourier: Trong bài này, dùng fftshift để dịch tâm tần số về giữa, chuẩn hóa về thang [0,255]
+- Định nghĩa hàm fast_fourier()
+```python
+def fast_fourier(img):
+    # Biến đổi Fourier 2D
+    f = np.fft.fft2(img)
+    # Dịch tâm phổ (center the frequency spectrum)
+    fshift = np.fft.fftshift(f)
+    # Tính biên độ phổ và lấy log 
+    mag = 20 * np.log(np.abs(fshift) + 1)
+    # Chuyển về kiểu uint8 sau khi giới hạn giá trị trong [0,255]
+    return Image.fromarray(np.clip(mag, 0, 255).astype(np.uint8))
+```
+2. Phép biến đổi Butterworth Lowpass thêm Min Filter để lọc ảnh
+- Định nghĩa hàm butter_lowpass()
+```python
+def butter_lowpass(img, D0=30):
+    # Lấy kích thước ảnh
+    r, c = img.shape
+    # Tạo lưới tọa độ và dịch về tâm ảnh
+    x, y = np.meshgrid(np.arange(r) - r//2, np.arange(c) - c//2, indexing='ij')
+    d = np.sqrt(x**2 + y**2)  # khoảng cách tới tâm ảnh
+    # Tạo mặt nạ Butterworth thông thấp bậc 2
+    h = 1 / (1 + (d / D0)**2)
+    # Biến đổi Fourier
+    f = np.fft.fft2(img)
+    fshift = np.fft.fftshift(f)
+    # Áp dụng mặt nạ lọc
+    fnew = fshift * h
+    # Biến đổi ngược để về không gian ảnh
+    inv = np.abs(np.fft.ifft2(np.fft.ifftshift(fnew)))
+    # Giới hạn giá trị ảnh và làm mịn thêm bằng minimum_filter
+    out = np.clip(inv, 0, 255).astype(np.uint8)
+    return Image.fromarray(minimum_filter(out, size=3))
+```
+3. Phép biến đổi Butterworth Highpass thêm Max Filter để lọc ảnh
+- Định nghĩa hàm butter_lowpass()
+```python
+def butter_highpass(img, D0=30):
+    # Lấy kích thước ảnh
+    r, c = img.shape
+    # Tạo lưới tọa độ và dịch về tâm ảnh
+    x, y = np.meshgrid(np.arange(r) - r//2, np.arange(c) - c//2, indexing='ij')
+    d = np.sqrt(x**2 + y**2)  # khoảng cách tới tâm ảnh
+    # Tạo mặt nạ Butterworth thông cao bậc 2
+    h = 1 / (1 + (D0 / (d + 1e-8))**2)  # cộng 1e-8 để tránh chia cho 0
+    # Biến đổi Fourier
+    f = np.fft.fft2(img)
+    fshift = np.fft.fftshift(f)
+    # Áp dụng mặt nạ lọc
+    fnew = fshift * h
+    # Biến đổi ngược để về không gian ảnh
+    inv = np.abs(np.fft.ifft2(np.fft.ifftshift(fnew)))
+    # Giới hạn giá trị ảnh và làm sắc nét thêm bằng maximum_filter
+    out = np.clip(inv, 0, 255).astype(np.uint8)
+    return Image.fromarray(maximum_filter(out, size=3))
+```
+#### Tạo hàm thực thi và hiển thị ảnh
+1. Tạo danh sách chứa tên các phương pháp và hà tương ứng
+```python
+filters = [
+    ("Fourier", fast_fourier),
+    ("Lowpass", butter_lowpass),
+    ("Highpass", butter_highpass)
+]
+```
+2. Main code
+- Thư mục ảnh đầu vào , đầu ra
+```python
+folder = 'exercise'
+output = 'output_4'
+os.makedirs(output, exist_ok=True)
+```
+- Lấy 3 ảnh trong thư mục đầu vào, mở và chuyển sang RGB
+```python
+def process_images():
+    for file in os.listdir(folder):
+        if not file.lower().endswith((".jpg", ".png", ".jpeg")):
+            continue
+
+        img_path = os.path.join(folder, file)
+        img = Image.open(img_path).convert('RGB')
+```
+- Đảo thứ tự màu RGB , chuyển sang ảnh xám và chọn hàm lọc ngẫu nhiên
+```python
+        # Đảo thứ tự màu RGB → GBR
+        r, g, b = img.split()
+        img = Image.merge('RGB', (g, b, r))
+
+        gray = img.convert('L')
+        gray_np = np.asarray(gray)
+
+        # Chọn hàm lọc ngẫu nhiên
+        name, func = random.choice(filters)
+        print(f"Đang áp dụng: {name} cho ảnh {file}")
+
+        result = func(gray_np)
+```
+- Lưu ảnh và hiển thị
+```python
+        # Lưu
+        save_name = f"{name}_{file}"
+        result.save(os.path.join(output, save_name))
+        # Hiển thị kết quả
+        plt.imshow(result, cmap='gray')
+        plt.title(save_name)
+        plt.axis('off')
+        plt.show()
+
+# CHẠY
+process_images()
+``` 
 
 
 
