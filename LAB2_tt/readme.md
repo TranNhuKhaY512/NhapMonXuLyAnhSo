@@ -192,11 +192,14 @@ def Gamma_Correction(im_1, gamma=0.5):
 - Định nghĩa hàm  Log_Transformation()
 ```python
 def Log_Transformation(im_1):
+    # Chuyển kiểu dữ liệu sang float để tính toán log chính xác
     b1 = im_1.astype(np.float32)
     b2 = np.max(b1)
+    # Nếu toàn ảnh đều là 0, trả về ảnh đen
     if b2 == 0:
         return np.zeros_like(im_1, dtype=np.uint8)
-    c = (128.0 * np.log(1 + b1)) / np.log(1 + b2)
+    # dùng log(1 + b1) để tránh log(0) gây lỗi 
+    c = (128.0 * np.log(1 + b1)) / np.log(1 + b2) 
     return np.clip(c, 0, 255).astype(np.uint8)
 ```
 4. Histogram equalization: trong bài dùng để tạo ảnh mới rõ nét với độ sáng cân bằng bằng cách chuẩn hóa histogram bằng hàm tích lũy CDF.
@@ -204,11 +207,17 @@ def Log_Transformation(im_1):
 ```python
 def Histogram_equalization(im_1):
     flat = im_1.flatten()
+    # Tính histogram 
     hist, _ = np.histogram(flat, 256, [0, 256])
+    # Tính hàm phân phối tích lũy (CDF)
     cdf = hist.cumsum()
+    # Bỏ qua các giá trị bằng 0 để tránh chia 0
     cdf_m = np.ma.masked_equal(cdf, 0)
+    # Chuẩn hóa CDF về khoảng [0, 255]
     cdf_m = (cdf_m - cdf_m.min()) * 255 / (cdf_m.max() - cdf_m.min())
+    # Gán lại các giá trị đã bỏ qua bằng 0
     cdf = np.ma.filled(cdf_m, 0).astype('uint8')
+    # Tra bảng ánh xạ để thay pixel cũ bằng pixel mới
     equalized = cdf[flat]
     return np.reshape(equalized, im_1.shape)
 ```
@@ -220,6 +229,7 @@ def Contrast_Stretching(im_1):
     b = np.max(im_1)
     if a == b:
         return np.zeros_like(im_1, dtype=np.uint8)
+ # Kéo dãn về khoảng [0, 255]
     stretched = 255.0 * (im_1 - a) / (b - a)
     return np.clip(stretched, 0, 255).astype(np.uint8)
 ```
