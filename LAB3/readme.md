@@ -15,6 +15,7 @@
 - **scipy** : xử lý ảnh đa chiều, dùng cho các phép biến đổi, lọc ảnh.
   
 ## Chi tiết các phép biến đổi :
+---
 ### 1. Chọn đối tượng trong ảnh: Là phép trích ảnh nhỏ trong ảnh lớn ban đầu.
 - Mục đích: cắt 1 vùng nhỏ (1 đối tượng) trong ảnh.
 - Chọn vùng theo tọa độ [(y1 : y2),(x1 : x2)]
@@ -25,7 +26,7 @@
 data = iio.imread('fruit.jpg')
 bmg = data[800:1200, 570:980]
 ```
-
+---
 ### 2. Tịnh tiến đơn
 - Mục đích: dịch chuyển toàn bộ ảnh có thể sang trái/ phải/ lên trên/ xuống dưới.
 - Sau khi dịch chuyển ảnh thì sẽ xuất hiện vùng trống và vùng trống đó màu đen (giá trị 0).
@@ -48,7 +49,8 @@ bdata = nd.shift (data, (-10, -20), order=0) # nd.shift(data, (dy,dx), order=0)
 - Dịch xuống dưới: dy dương
 - Dịch sang trái : dx âm
 - Dịch sang phải : dx dương.
-  
+
+---
 ### 3. Thay đổi kích thước ảnh
 - Mục đích: Phóng to hoặc thu nhỏ ảnh theo tỷ lệ.
 - Công thức toán học:
@@ -63,7 +65,7 @@ data = iio.imread('fruit.jpg')
 data2 = nd.zoom (data, (2, 2, 1)) #phóng to
 data3 = nd.zoom(data, (0.5, 0.9, 1)) # thu nhỏ
 ```
-
+---
 ### 4. Xoay ảnh
 - Mục đích: xoay ảnh theo góc xoay. Ví dụ ảnh bị nghiêng thì xoay về cho đúng hướng chuẩn.
 - Dùng hàm rotate(image, degree) để xoay một ảnh với Image: là ảnh trong bộ nhớ, Degree: là góc xoay
@@ -73,6 +75,7 @@ data3 = nd.zoom(data, (0.5, 0.9, 1)) # thu nhỏ
 data = iio.imread('fruit.jpg')
 d2 = nd.rotate (data, 20, reshape=False)
 ```
+---
 ### 5. Dilation và Erosion (Giãn và co ảnh nhị phân)
 - Mục đích: Dùng để loại bỏ những pixel nhiễu.
 - Dilation thay thế pixel tọa độ (i, j) bằng giá trị lớn nhất của những pixel lân cận (kề).(giãn) 
@@ -83,6 +86,7 @@ data = iio.imread('world_cup.jpg', mode = 'L')
 d1 = nd.binary_dilation (data)
 d2 = nd.binary_dilation (data, iterations=3) # lặp ảnh giãn 3 lần, vùng trắng dày hơn
 ```
+---
 ### 6. Coordinate Mapping (biến dạng theo tọa độ)
 - Mục đích: Tạo hiệu ứng ngẫu nhiên, biến dạng ảnh.
 - Công thức:
@@ -99,6 +103,7 @@ q=2 * d * np.random.ranf (M.shape) - d
 mp = (M + q).astype (int)
 dl = nd.map_coordinates (data, mp)
 ```
+---
 ### 7. Biến đổi chung (Generic Transformation)
 - Mục đích: Dùng khi ta muốn biến đổi các ảnh chung phép toán do người dùng định nghĩa, mỗi pixel bị dời vị trí theo dạng sóng
 - Công thức:
