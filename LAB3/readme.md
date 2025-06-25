@@ -56,6 +56,7 @@ bdata = nd.shift (data, (-10, -20), order=0) # nd.shift(data, (dy,dx), order=0)
 I'(x,y)= I(x/sx , y /sy)
 ```
 - `sx, sy` : lần lượt là hệ số zoom theo chiều ngang và dọc
+- Ví dụ muốn phóng to đối tượng x2 lần: sx = sy = 2, giá trị ảnh mới tại (x,y) là nội suy từ ảnh gốc tại (x/2,y/2)
 - Code chính: 
 ```python
 data = iio.imread('fruit.jpg')
@@ -64,11 +65,51 @@ data3 = nd.zoom(data, (0.5, 0.9, 1)) # thu nhỏ
 ```
 
 ### 4. Xoay ảnh
-- Mục đích: xoay ảnh theo góc xoay.
+- Mục đích: xoay ảnh theo góc xoay. Ví dụ ảnh bị nghiêng thì xoay về cho đúng hướng chuẩn.
 - Dùng hàm rotate(image, degree) để xoay một ảnh với Image: là ảnh trong bộ nhớ, Degree: là góc xoay
+- Ví dụ xoay 1 ảnh với 1 góc 45 độ lúc này degree = 45 -> rotate(image,45)
 - Code chính:
 ```python
 data = iio.imread('fruit.jpg')
 d2 = nd.rotate (data, 20, reshape=False)
+```
+### 5. Dilation và Erosion (Giãn và co ảnh nhị phân)
+- Mục đích: Dùng để loại bỏ những pixel nhiễu.
+- Dilation thay thế pixel tọa độ (i, j) bằng giá trị lớn nhất của những pixel lân cận (kề).(giãn) 
+- Erosion thay thế pixel tọa độ (i, j) bằng giá trị nhỏ nhất của những pixel lân cận (kề).(co)
+- code chính
+```python
+data = iio.imread('world_cup.jpg', mode = 'L')
+d1 = nd.binary_dilation (data)
+d2 = nd.binary_dilation (data, iterations=3) # lặp ảnh giãn 3 lần, vùng trắng dày hơn
+```
+### 6. Coordinate Mapping (biến dạng theo tọa độ)
+- Mục đích: Tạo hiệu ứng ngẫu nhiên, biến dạng ảnh.
+- Công thức:
+```math
+ (x ′,y ′)=(x+δx(x,y), y+δy (x,y))
+```
+- `𝛿𝑥,𝛿𝑦`: dịch chuyển ngẫu nhiên theo mỗi điểm ảnh
+- Code chính:
+```python
+V, H= data.shape
+M = np.indices((V, H))
+d = 5
+q=2 * d * np.random.ranf (M.shape) - d
+mp = (M + q).astype (int)
+dl = nd.map_coordinates (data, mp)
+```
+### 7. Biến đổi chung (Generic Transformation)
+- Mục đích: Dùng khi ta muốn biến đổi các ảnh chung phép toán do người dùng định nghĩa, mỗi pixel bị dời vị trí theo dạng sóng
+- Công thức:
+```math
+x′=x+10*cos( x/10), y′=y+10*cos( y/10 )
+```
+- Code chính:
+```python
+def GeoFun (outcoord):
+    a = 10 * np.cos (outcoord[0]/10.0) + outcoord[0]
+    b = 10 * np.cos (outcoord[1]/10.0) + outcoord[1]
+    return a, b
 ```
 
