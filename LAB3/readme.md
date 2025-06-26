@@ -424,14 +424,106 @@ def rotate(img):
     reshape = input("  reshape=True? (y/n): ").strip().lower() == 'y'
     return nd.rotate(img, angle, reshape=reshape), f"rotate_{int(angle)}_{reshape}.jpg"
 ```
-3. Phép phóng to hoặc thu nhỏ : sử dụng hàm zoom() để thay đổi kích thước ảnh, cho phép hỏi hệ số zoom (z). Nếu 
+3. Phép phóng to hoặc thu nhỏ : sử dụng hàm zoom() để thay đổi kích thước ảnh, cho phép hệ người dùng nhập hệ số zoom (z).
 ```python
 def zoom(img):
     z = float(input("  Hệ số zoom: "))
     zoom_factors = (z, z, 1) if img.ndim == 3 else (z, z)
     return nd.zoom(img, zoom_factors), f"zoom_{z}.jpg"
 ```
+4. Phép Gaussian: dùng để làm mờ ảnh bằng bộ lọc gaussian, giảm nhiễu, làm mịn, cho phép người dùng nhập mức độ mờ (sigma) tùy ý.
+```python
+def gaussian_blur(img):
+    sigma = float(input("  Sigma: "))
+    if img.ndim == 3:
+        blurred = np.stack([nd.gaussian_filter(img[..., i], sigma) for i in range(3)], axis=-1)
+    else:
+        blurred = nd.gaussian_filter(img, sigma)
+    return blurred, f"gauss_{sigma}.jpg"
+```
+5. Phép biến đổi sóng: tạo ảnh gợn sóng, làm méo hình, cho phép người dùng nhập biên độ sóng (biên độ sóng càng lớn sóng càng cao ảnh méo mạnh, biên độ sóng nhỏ gợn nhẹ như rung nước )
+```python
+def wave_warp(img):
+    A = float(input("  Biên độ sóng: "))
+    h, w = img.shape[:2]
+    y, x = np.indices((h, w))
+#Tạo trục x mới bị lệch theo hàm sin
+    x_new = x + A * np.sin(2 * np.pi * y / h)
+    coords = [y, x_new]
+    if img.ndim == 3:
+        warped = np.zeros_like(img)
+        for i in range(3):
+            warped[..., i] = nd.map_coordinates(img[..., i], coords, order=1, mode='reflect')
+    else:
+        warped = nd.map_coordinates(img, coords, order=1, mode='reflect')
+    return warped, f"wave_{A}.jpg"
+```
+#### Tạo hàm và thực thi
+- Cho phép người dùng nhập đường dẫn 3 ảnh bất kì
+```python
+def choose_image():
+    print("== Nhập đường dẫn 3 ảnh bất kỳ (vd: exercise/pagoda.jpg) ==")
+    paths = [] # Hiển thị yêu cầu nhập 3 đường dẫn ảnh
+    for i in range(3):
+        path = input(f"Nhập ảnh {i+1}: ").strip()  
+        if not os.path.isfile(path): # Kiểm tra file tồn tại
+            raise FileNotFoundError(f"Không tìm thấy: {path}")
+        paths.append(path)
+```
+- Hiển thị ảnh và lưu ảnh:
+```python
+def show_and_save(img, out_name):
+    output_dir = "output"
+    os.makedirs(output_dir, exist_ok=True)  # Tạo thư mục nếu chưa có
 
+    full_path = os.path.join(output_dir, out_name)
+    iio.imsave(full_path, img)
+    print(f" Lưu vào: {full_path}")
+
+    plt.imshow(img)
+    plt.axis('off')
+    plt.title(out_name)
+    plt.show()
+```
+- Tạo menu cho người dùng : cho phép người dùng chọn phương pháp biến đổi ảnh. Khi người dùng nhập số theo menu (1, 2, 3, 4, 5) chương trình gọi đúng hàm tương ứng .
+```python
+def main():
+    img, base = choose_image()
+
+    while True:
+        print("\n== MENU ==")
+        print("1. Tịnh tiến")
+        print("2. Xoay")
+        print("3. Zoom")
+        print("4. Gaussian Blur")
+        print("5. Hiệu ứng sóng")
+        print("0. Thoát")
+        choice = input("Chọn thao tác: ").strip()
+
+        match choice:
+            case "1":
+                result, fname = translate(img)
+            case "2":
+                result, fname = rotate(img)
+            case "3":
+                result, fname = zoom(img)
+            case "4":
+                result, fname = gaussian_blur(img)
+            case "5":
+                result, fname = wave_warp(img)
+            case "0":
+                print("Thoát.")
+                break
+            case _:
+                print("Lựa chọn không hợp lệ.")
+                continue
+
+        show_and_save(result, f"{base}_{fname}")
+        img = result  # Cập nhật ảnh đầu vào nếu muốn biến đổi tiếp
+
+if __name__ == "__main__":
+    main()
+```
 
 
 
