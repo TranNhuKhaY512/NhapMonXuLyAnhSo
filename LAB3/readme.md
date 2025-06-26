@@ -409,15 +409,17 @@ for i in range(c):  # áp dụng từng kênh màu
 ```
 ### Bài tập 5: Tạo một chương trình menu tương tác cho phép người dùng chọn các phép biến đổi sau: Tịnh tiến (hỏi số pixel di chuyển theo x và y). Xoay (hỏi góc xoay và chọn reshape=True/False).Phóng to/thu nhỏ (hỏi hệ số zoom). Làm mờ Gaussian (hỏi giá trị sigma). Biến đổi sóng (hỏi biên độ sóng). Người dùng chọn ảnh từ 3 ảnh bất kì.
 #### Trong bài này sử dụng các phép biến đổi tịnh tiến, xoay, phóng to/ thu nhỏ, làm mờ và biến đổi sóng.
-1. Phép tịnh tiến : Dùng để dịch chuyển đối tượng bằng hàm shift(), cho phép hỏi số pixel di chuyển theo x (trục ngang), y (trục dọc). 
+1. Phép tịnh tiến : Dùng để dịch chuyển đối tượng bằng hàm shift(), cho phép hỏi số pixel di chuyển theo x (trục ngang), y (trục dọc).
+   - Định nghĩa tinhTien():
 ```python
-def translate(img):
+def tinhTien(img):
     dx = int(input("  Dịch theo X: "))
     dy = int(input("  Dịch theo Y: "))
     shift = (dy, dx, 0) if img.ndim == 3 else (dy, dx)
-    return nd.shift(img, shift, order=0), f"translate_{dx}_{dy}.jpg"
+    return nd.shift(img, shift, order=0), f"tinhTien_{dx}_{dy}.jpg"
 ```
 2. Phép xoay: sử dụng hàm rotate(image, degree) để xoay một ảnh với Image: là ảnh trong bộ nhớ, Degree: là góc xoay, và cho phép người dùng nhập góc xoay và chọn reshape=True/False. True là tự động mở rộng kích thước ảnh để không bị mất góc ảnh, False là giữ nguyên kích thước ảnh gốc có thể bị mất gốc sau xoay.
+  - Định nghĩa hàm rotate(): 
 ```python
 def rotate(img):
     angle = float(input("  Góc xoay: "))
@@ -425,6 +427,7 @@ def rotate(img):
     return nd.rotate(img, angle, reshape=reshape), f"rotate_{int(angle)}_{reshape}.jpg"
 ```
 3. Phép phóng to hoặc thu nhỏ : sử dụng hàm zoom() để thay đổi kích thước ảnh, cho phép hệ người dùng nhập hệ số zoom (z).
+   - Định nghĩa hàm zoom()
 ```python
 def zoom(img):
     z = float(input("  Hệ số zoom: "))
@@ -432,6 +435,7 @@ def zoom(img):
     return nd.zoom(img, zoom_factors), f"zoom_{z}.jpg"
 ```
 4. Phép Gaussian: dùng để làm mờ ảnh bằng bộ lọc gaussian, giảm nhiễu, làm mịn, cho phép người dùng nhập mức độ mờ (sigma) tùy ý.
+   - Định nghĩa hàm gaussian_blur():
 ```python
 def gaussian_blur(img):
     sigma = float(input("  Sigma: "))
@@ -442,6 +446,7 @@ def gaussian_blur(img):
     return blurred, f"gauss_{sigma}.jpg"
 ```
 5. Phép biến đổi sóng: tạo ảnh gợn sóng, làm méo hình, cho phép người dùng nhập biên độ sóng (biên độ sóng càng lớn sóng càng cao ảnh méo mạnh, biên độ sóng nhỏ gợn nhẹ như rung nước )
+   - Định nghĩa hàm wave_warp():
 ```python
 def wave_warp(img):
     A = float(input("  Biên độ sóng: "))
