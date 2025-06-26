@@ -507,7 +507,7 @@ def main():
 
         match choice:
             case "1":
-                result, fname = translate(img)
+                result, fname = tinhTien(img)
             case "2":
                 result, fname = rotate(img)
             case "3":
