@@ -34,14 +34,13 @@ pip install opencv-python
 #### 1.1 Phương pháp Otsu
 - Mục đích : xác định ngưỡng phân vùng dựa trên phân phối histogram, giúp chia hình ảnh thành 2 lớp dựa trên các giá trị cường độ thang độ xám của các điểm ảnh của nó.
 - Công thức: tính toán ngưỡng bằng cách tối đa hóa phương sai giữa các lớp của giá trị pixel
-```math
-  σ² = ω₁ * ω₂ * (μ₁ - μ₂)²
-```
-Trong đó: 
-- `σ^2b​(t)`: phương sai giữa hai lớp tại ngưỡng 
-- `ω1(t)`: xác suất của lớp 1 (dưới ngưỡng t – thường là nền)
-- `𝜔2(𝑡)`: xác suất của lớp 2 (trên ngưỡng t – thường là đối tượng)
-- `μ1(t),μ2(t)`: trung bình mức xám của hai lớp
+  ![image](https://github.com/user-attachments/assets/1f9c73c8-f8f3-4d07-9c41-0ac5ca7f1758)
+
+- Trong đó: 
+- `σ²B(k)`:Phương sai giữa lớp ứng với ngưỡng  𝑘 
+- `mG`: Trung bình mức xám toàn ảnh 
+- `P1(k)`: Xác suất (tích lũy) của lớp 1 (foreground) đến mức xám 𝑘
+- `m(k)`: Trung bình mức xám của lớp foreground đến mức 𝑘
 - Code chính:
 ```python
 data = Image.open('fruit.jpg').convert('L')
@@ -54,6 +53,15 @@ b = a > thres
 #### 1.2 Phương pháp Adaptive Thresholding
 - Cải tiến phân vùng chính xác hơn Otsu. Chia ảnh thành nhiều ảnh nhỏ và tính threshold cho từng ảnh nhỏ.
 - Mục đích: Phân vùng ảnh trong điều kiện ánh sáng không đồng đều hoặc nhiễu, nơi mà Otsu không hiệu quả.
+- Công thức toán học :
+```math
+T(x,y)=mean(Nx,y)−C
+```
+- Trong đó:
+- `T(x,y)`: ngưỡng tại điểm (x, y)
+- `Nx,y`: vùng lân cận của điểm (x, y) (ví dụ: 11x11 pixel)
+- `mean(...)`: trung bình mức xám các điểm trong vùng
+- `C`: hằng số điều chỉnh
 - Code chính:
 ```python
 data = Image.open('fruit.jpg').convert('L')
@@ -81,6 +89,10 @@ cv2.watershed(data, labelled) # Thực hiện phân đoạn bằng thuật toán
 #### 3.1 Sử dụng binary_dilation 
 - Dilation cho phép các pixel ở foreground của 1 ảnh có thể со giãn. 
 - Mục đích : Làm đầy các lỗ nhỏ trong đối tượng, mở rộng các vùng foreground (màu trắng) trong ảnh nhị phân.
+- Công thức toán học:
+![image](https://github.com/user-attachments/assets/7964af7e-eee1-469c-be51-6915d1c29f5d)
+
+- Với 𝐴 và B là các tập hợp trong không gian 𝑍^2 (tập các điểm nguyên trong mặt phẳng)
 - Code chính:
 ```python
 data = Image.open('dil_img.gif').convert('L')
@@ -88,6 +100,9 @@ b = nd.binary_dilation(data, iterations=50)
 ```
 #### 3.2 Sử dụng binary_opening
 - Mục đích: loại bỏ nhiễu nhỏ (đốm sáng nhỏ) và làm biên các vùng sáng của đối tượng mượt hơn.
+- Công thức toán học:
+![image](https://github.com/user-attachments/assets/27998609-06c7-4529-936b-974488e04d99)
+
 - Code chính:
 ```python
 data = Image.open('dil_img.gif').convert('L')
@@ -97,10 +112,32 @@ b = nd.binary_opening (data, structure=s, iterations=25)
 ```
 #### 3.3 Sử dụng binary_erosion
 - Mục đích: Dùng để co đối tượng bằng cách loại bỏ pixels ở biên của đối tượng.
-- Code chính:
-- 
+- Công thức toán học:
+![image](https://github.com/user-attachments/assets/66217b84-cb23-43b7-b292-884a9ca87863)
 
+- Với 𝐴 và B là các tập hợp trong không gian 𝑍^2 (tập các điểm nguyên trong mặt phẳng)
+- Code chính:
+```python
+data = Image.open('dil_img.gif').convert('L')
+# Định nghĩa phần tử cấu trúc (structuring element)
+S = [[0, 1, 0], [1, 1, 1], [0, 1, 0]] 
+b = nd.binary_erosion (data, structure=s, iterations=50)
+```
+##### 3.4 Sử dụng binary_closing
+- Mục đích: làm trơn các đoạn viền, nhưng trái ngược với phép mở, nó thường có tác dụng nối liền các khe hẹp và vết nứt dài, hẹp, lấp các lỗ nhỏ, và làm đầy các khoảng trống trong đường viền.
+- Công thức toán học:
+![image](https://github.com/user-attachments/assets/113c9642-05b6-41d2-8b7a-0d3219b21af7)
+
+- Với 𝐴 và B là các tập hợp trong không gian 𝑍^2 (tập các điểm nguyên trong mặt phẳng)
+- Code chính:
+```python
+data = Image.open('dil_img.gif').convert('L')
+# Định nghĩa phần tử cấu trúc
+s = [[0, 1, 0], [1, 1, 1], [0, 1, 0]]
+b = nd.binary_closing (data, structure=s, iterations=50)
+```
 
 ## Tài liệu tham khảo:
-- https://www.baeldung.com/cs/otsu-segmentation
-- 
+- ***Rafael C. Gonzalez, Richard E. Wods - Digital Image Processing-Pearson (2017)***
+- Slide bài giảng Nhập môn Xử lý ảnh số - Văn Lang University
+  
