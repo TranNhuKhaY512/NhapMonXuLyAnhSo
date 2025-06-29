@@ -182,6 +182,8 @@ binary_result = d1 > b
 - Code chính:
 ```python
 
+```
+
 ---
 ## Tài liệu tham khảo:
 - ***Rafael C. Gonzalez, Richard E. Wods - Digital Image Processing-Pearson (2017)***
