@@ -181,9 +181,82 @@ binary_result = d1 > b
   - Phương pháp binary closing: dùng để làm trơn các đoạn viền, làm đầy các khoảng trống trong đường viền.
 - Code chính:
 ```python
-
+# Coordinate Mapping (biến dạng nhẹ)
+V, H = a.shape
+M = np.indices((V, H)).astype(np.float32)
+d = 5
+q = 2 * d * np.random.ranf(M.shape).astype(np.float32) - d
+mp = M + q
+d1 = nd.map_coordinates(a, mp, order=1, mode='reflect')
+# Ngưỡng hóa Otsu
+threshold = threshold_otsu(d1)
+d1_bin = d1 > threshold
+# Binary Closing
+s = np.array([[0, 1, 0],
+              [1, 1, 1],
+              [0, 1, 0]], dtype=np.uint8)
+b = nd.binary_closing(d1_bin, structure=s, iterations=50)
 ```
-
+### 4. Viết chương trình cho phép người dùng nhập chức năng muốn xử lý. (Có thể chọn 1 chức năng duy nhất hoặc kết hợp 2 chức năng của geometric_transformation và segment).
+- Trong bài này sử dụng 2 phương pháp biến đổi chính là biến đổi hình học và phân vùng ảnh.
+- Biến đổi hình học gồm: tịnh tiến, thay đổi kích thước ảnh, xoay và biến dạng ảnh. Dùng để dịch chuyển, xoay, co giãn, lật, biến dạng ảnh.
+- Phân vùng ảnh gồm : otsu, adaptive thresholding, Binary_erosion và Binary_dilation. Dùng để làm nổi bật hoặc cô lập các đối tượng quan tâm để phân tích, nhận dạng.
+- Code chính:
+  - Phần viết cây thư mục và hiển thị:
+    ```python
+    tree_data = {
+    "geometric_transformation": {
+        "coordinate_mapping": {},
+        "Rotate": {},
+        "Scale": {},
+        "Shift": {}
+    },
+    "segment": {
+        "Adaptive_thresholding": {},
+        "Binary_dilation": {},
+        "Binary_erosion": {},
+        "Otsu": {}
+    } }
+    def print_tree(data, prefix=""):
+    keys = list(data.keys())
+    for i, key in enumerate(keys):
+        is_last = (i == len(keys) - 1)
+        connector = "└── " if is_last else "├── "
+        print(prefix + connector + key)
+        new_prefix = prefix + ("    " if is_last else "│   ")
+        if isinstance(data[key], dict):
+            print_tree(data[key], new_prefix)
+    ```
+  - Các hàm tương ứng với chức năng:
+  ```python
+  func_map = {
+    "coordinate_mapping": coordinate_mapping,
+    "Rotate": Rotate,
+    "Scale": phongTo,
+    "Shift": Shift,
+    "Adaptive_thresholding": Adaptive_thresholding,
+    "Binary_dilation": Binary_dilation,
+    "Binary_erosion": Binary_erosion,
+    "Otsu": Otsu
+  }
+  ```
+  - Main code:
+  ```python
+  # ==== Chương trình chính ==== print("==== Danh sách chức năng xử lý ảnh ====")
+  print_tree(tree_data)
+  # cho phép ng dùng nhập chức năng
+  choices = input("\nNhập 1 hoặc 2 tên chức năng cách nhau bằng dấu phẩy (ví dụ: Rotate, Otsu): ").strip().split(',')
+  img_np = iio.imread('exercise/dalat.jpg')
+  
+  # Áp dụng lần lượt các hàm
+  img_result = img_np
+  for ch in choices:
+      ch = ch.strip().capitalize()
+      if ch in func_map:
+          img_result = func_map[ch](img_result)
+      else:
+          print(f"[!] Không tìm thấy chức năng: {ch}")
+    ```
 ---
 ## Tài liệu tham khảo:
 - ***Rafael C. Gonzalez, Richard E. Wods - Digital Image Processing-Pearson (2017)***
