@@ -175,7 +175,7 @@ b = threshold_local (d1, block_size=61, offset=10)
 binary_result = d1 > b
 ```
 ---
-### 3. Viết chương trình chọn Quản trường Lâm Viên trong ảnh Đà Lạt từ thư mục exercise. Dùng phương pháp Coordinate Mapping và Binary Closing cho vùng vừa chọn. Lưu vào máy với tên là quan_truong_lam_vien.jpg.
+### 3. Viết chương trình chọn Quảng trường Lâm Viên trong ảnh Đà Lạt từ thư mục exercise. Dùng phương pháp Coordinate Mapping và Binary Closing cho vùng vừa chọn. Lưu vào máy với tên là quangquang_truong_lam_vien.jpg.
 - Trong bài sử dụng phương pháp biến đổi theo tọa độ - Coordinate Mapping và biến đổi đối tượng trong ảnh với phương pháp Binary closing.
   - Phương pháp biến đổi theo tọa độ - coordinate mapping: dùng để biến dạng ảnh bằng cách thay đổi tọa độ của các điểm ảnh.
   - Phương pháp binary closing: dùng để làm trơn các đoạn viền, làm đầy các khoảng trống trong đường viền.
