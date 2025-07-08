@@ -37,7 +37,7 @@ pip install opencv-python
 - Mục đích: Tìm tất cả các vùng liên thông (connected components) từ ảnh nhị phân bằng cách bắt đầu từ một điểm đã biết trong mỗi vùng, rồi mở rộng dần vùng đó bằng phép giãn có điều kiện (conditional dilation) cho đến khi không mở rộng được nữa (đạt hội tụ).
 - Công thức toán học:
 ![image](https://github.com/user-attachments/assets/48f3b43a-36dd-4fa8-a4b7-583521490543)
--Trong đó :
+- Trong đó :
 - `B`: phần tử cấu trúc
 - Quy trình kết thúc khi ```math X_k = X_{k-1}``` chứa toàn bộ các thành phần liên thông của điểm ảnh tiền cảnh (foreground pixels) trong ảnh.
 - Code chính:
@@ -71,8 +71,8 @@ bmg = abs(data - nd.shift(data, (0,1), order=0))
 ![image](https://github.com/user-attachments/assets/b96be4c3-11fa-4365-aec4-9eb8983e1e99)
 
 - Trong đó:
-- `$g_x(x, y) = \frac{\partial f(x, y)}{\partial x}$` : Đạo hàm bậc 1 theo trục x
-- `$g_y(x, y) = \frac{\partial f(x, y)}{\partial y}$` : Đạo hàm bậc 1 theo trục y 
+- ```math g_x(x, y) = \frac{\partial f(x, y)}{\partial x}``` : Đạo hàm bậc 1 theo trục x
+- ```math g_y(x, y) = \frac{\partial f(x, y)}{\partial y}``` : Đạo hàm bậc 1 theo trục y 
 - Code chính:
 ```python
 data = Image.open('geometric.png')
@@ -87,9 +87,9 @@ bmg = abs(a) + abs(b)
 ![image](https://github.com/user-attachments/assets/976a0efa-42a5-4f1d-a39b-df420e85ae12)
 - Trong đó:
 - ` M`: 	Ma trận cấu trúc, tính từ đạo hàm ảnh
--  `k`: Hằng số điều chỉnh
--   `det(M)`: định thức của ma trận cấu trúc
--   `trace(M)` : đo tổng độ biến thiên theo cả hai hướng x và y (tổng các phần tử trên đường chéo chính của ma trận M.)
+- `k`: Hằng số điều chỉnh
+- `det(M)`: định thức của ma trận cấu trúc
+- `trace(M)` : đo tổng độ biến thiên theo cả hai hướng x và y (tổng các phần tử trên đường chéo chính của ma trận M.)
 - Code chính:
 ```python
 def Harris(indata , alpha=0.2):
