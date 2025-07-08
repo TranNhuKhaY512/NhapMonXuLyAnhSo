@@ -34,7 +34,7 @@ pip install opencv-python
   
 ## Chi tiết các phép biến đổi & công thức
 ### 1.Gán nhãn ảnh
-- Mục đích: Tìm tất cả các vùng liên thông (connected components) từ ảnh nhị phân bằng cách bắt đầu từ một điểm đã biết trong mỗi vùng, rồi mở rộng dần vùng đó bằng phép giãn có điều kiện (conditional dilation) cho đến khi không mở rộng được nữa (đạt hội tụ).
+- Mục đích: Tìm tất cả các vùng liên thông (connected components) từ ảnh nhị phân bằng cách bắt đầu từ một điểm đã biết trong mỗi vùng, rồi mở rộng dần vùng đó bằng phép giãn có điều kiện cho đến khi không mở rộng được nữa (đạt hội tụ).
 - Công thức toán học:
 ![image](https://github.com/user-attachments/assets/48f3b43a-36dd-4fa8-a4b7-583521490543)
 - Trong đó :
@@ -65,7 +65,7 @@ bmg = abs(data - nd.shift(data, (0,1), order=0))
 ```
 ---
 ### 3. Dò tìm cạnh với Sobel Filter
-- Là một bộ lọc đạo hàm (derivative filter) dùng để dò tìm cạnh trong ảnh số, bằng cách tính xấp xỉ đạo hàm bậc nhất theo các hướng ngang (x) và dọc (y).
+- Là một bộ lọc đạo hàm dùng để dò tìm cạnh trong ảnh số, bằng cách tính xấp xỉ đạo hàm bậc nhất theo các hướng ngang (x) và dọc (y).
 - Mục đích: phát hiện cạnh của các đối tượng trong ảnh, nơi cường độ thay đổi mạnh.
 - Công thức toán học :
 ![image](https://github.com/user-attachments/assets/b96be4c3-11fa-4365-aec4-9eb8983e1e99)
@@ -158,6 +158,34 @@ data = iio.imread('bird.png')
 image_gray = rgb2gray(data)
 # Áp dụng thuật toán Harris để phát hiện góc trên ảnh xám, k là tham số độ nhạy
 coordinate = corner_harris(image_gray, k = 0.001)
+```
+### 6. Image matching 
+- SIFT là một thuật toán phát hiện và mô tả đặc trưng ảnh được dùng để tìm các điểm tương ứng giữa nhiều ảnh khác nhau.
+- Mục đích: phát hiện các điểm đặc trưng nổi bật (keypoints) trong ảnh, sử dụng để so khớp ảnh.
+- Công thức:
+![image](https://github.com/user-attachments/assets/413704aa-cbbf-4fb8-89e2-56f25a951532)
+- Trong đó:
+- `L(x,y)` : ảnh sau khi làm mờ Gaussian.
+- `(x,y)`: tọa độ điểm ảnh
+- Code chính:
+```python
+# Dùng hàm harris_keypoint() để phát hiện đặc trưng
+def harris_keypoints(gray, k=0.04, thresh=0.01):
+    harris = cv2.cornerHarris(np.float32(gray), blockSize=2, ksize=3, k=k)
+    harris = cv2.dilate(harris, None)
+    keypoints = np.argwhere(harris > thresh * harris.max())
+    return [cv2.KeyPoint(float(x), float(y), 3) for y, x in keypoints]
+--------------------------------
+# tính descriptor bằng sift
+sift = cv2.SIFT_create()
+kp1, des1 = sift.compute(gray1, kp1)
+kp2, des2 = sift.compute(gray2, kp2)
+print("SIFT descriptor:", des1.shape, des2.shape)
+------------------------------------
+#Ghép cặp và lọc bằng RANSAC
+bf = cv2.BFMatcher(cv2.NORM_L2, crossCheck=True)  # L2 norm cho SIFT
+matches = bf.match(des1, des2)
+matches = sorted(matches, key=lambda m: m.distance)
 ```
 ---
 ## Tài liệu tham khảo:
