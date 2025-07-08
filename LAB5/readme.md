@@ -71,8 +71,8 @@ bmg = abs(data - nd.shift(data, (0,1), order=0))
 ![image](https://github.com/user-attachments/assets/b96be4c3-11fa-4365-aec4-9eb8983e1e99)
 
 - Trong đó:
-- ```math g_x(x, y) = \frac{\partial f(x, y)}{\partial x}``` : Đạo hàm bậc 1 theo trục x
-- ```math g_y(x, y) = \frac{\partial f(x, y)}{\partial y}``` : Đạo hàm bậc 1 theo trục y 
+- $$g_x(x, y) = \frac{\partial f(x, y)}{\partial x}$$ : Đạo hàm bậc 1 theo trục x
+- $$g_y(x, y) = \frac{\partial f(x, y)}{\partial y}$$ : Đạo hàm bậc 1 theo trục y 
 - Code chính:
 ```python
 data = Image.open('geometric.png')
