@@ -39,7 +39,7 @@ pip install opencv-python
 ![image](https://github.com/user-attachments/assets/48f3b43a-36dd-4fa8-a4b7-583521490543)
 -Trong đó :
 - `B`: phần tử cấu trúc
-- Quy trình kết thúc khi `$X_k = X_{k-1}$` chứa toàn bộ các thành phần liên thông của điểm ảnh tiền cảnh (foreground pixels) trong ảnh.
+- Quy trình kết thúc khi ```math X_k = X_{k-1}``` chứa toàn bộ các thành phần liên thông của điểm ảnh tiền cảnh (foreground pixels) trong ảnh.
 - Code chính:
 ```python
 data = Image.open('geometric.png').convert('L')
@@ -56,7 +56,7 @@ c = label(b)
 - Mục đích :Phát hiện vị trí các biên trong ảnh.
 - Công thức: tính toán dò tìm cạnh theo chiều dọc bằng cách lấy đạo hàm theo trục hoành (x)   
 ```math
-$g_x(x, y) = \frac{\partial f(x, y)}{\partial x}$
+g_x(x, y) = \frac{\partial f(x, y)}{\partial x}
 ```
 - Code chính:
 ```python
