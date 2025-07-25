@@ -171,13 +171,13 @@ def Histogram_equalization(im_1):
 - Mục đích: dùng để tăng độ tương phản tương tự Histogram Equalization nhưng bằng cách kéo dãn dãy giá trị pixel (thay đổi giá tri pixel) thay vì dùng xác suất, CDF để tính.
 - Công thức
 ```math
-s = (r - r_min) * (255 / (r_max - r_min))
+s = (r - rmin) * (255 / (rmax - rmin))
 ```
 - Trong đó: 
   -`s`: giá trị pixel mới sau khi giãn.
   - `r`: giá trị pixel gốc (trong ảnh đầu vào).
-  - `r_min`: giá trị pixel nhỏ nhất trong ảnh gốc.
-  - `r_max`: giá trị pixel lớn nhất trong ảnh gốc.
+  - `rmin`: giá trị pixel nhỏ nhất trong ảnh gốc.
+  - `rmax`: giá trị pixel lớn nhất trong ảnh gốc.
 ```python
 def Contrast_Stretching(im_1):
     a = np.min(im_1)
