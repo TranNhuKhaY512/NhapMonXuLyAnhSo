@@ -234,6 +234,7 @@ và
 
 - Ví dụ muốn phóng to đối tượng x2 lần: sx = sy = 2, giá trị ảnh mới tại (x,y) là nội suy từ ảnh gốc tại (x/2,y/2)
 - Code chính:
+  
 ```python
 # Tăng kích thước ảnh pagoda len 5 làn
 d3 = nd.zoom (data3, (5, 5, 1))
@@ -244,6 +245,7 @@ d3_blur = cv2.GaussianBlur(d3, (7, 7), 0)
 - Mục đích : điều chỉnh độ sáng và độ tương phản .
 - Công thức:
 <img width="1027" height="619" alt="image" src="https://github.com/user-attachments/assets/a1223d9e-bcb8-4591-ab05-e7a99fdcc4a4" />
+
 - Code chính:
 ```python
 #  Áp dụng ảnh pagoda theo công thứuc
