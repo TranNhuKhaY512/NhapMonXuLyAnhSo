@@ -224,10 +224,14 @@ d2 = np.fliplr(xoay)
 ```math
 I'(x,y)= I(x/sx , y /sy)
 ```
+- `sx, sy` : lần lượt là hệ số zoom theo chiều ngang và dọc
 và 
+
 <img width="413" height="122" alt="image" src="https://github.com/user-attachments/assets/04c51d4b-1059-4e85-8b24-f0132a51fa8b" />
 
-- `sx, sy` : lần lượt là hệ số zoom theo chiều ngang và dọc
+- Áp dụng công thức lọc Gaussian lên từng điểm ảnh, trong đó mỗi điểm ảnh được làm mờ bằng trung bình trọng số của các điểm lân cận.
+-  Phạm vi ảnh hưởng: x,y ∈ [−3,3]
+
 - Ví dụ muốn phóng to đối tượng x2 lần: sx = sy = 2, giá trị ảnh mới tại (x,y) là nội suy từ ảnh gốc tại (x/2,y/2)
 - Code chính:
 ```python
