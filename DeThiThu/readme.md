@@ -225,6 +225,7 @@ d2 = np.fliplr(xoay)
 I'(x,y)= I(x/sx , y /sy)
 ```
 - `sx, sy` : lần lượt là hệ số zoom theo chiều ngang và dọc
+
 và 
 
 <img width="413" height="122" alt="image" src="https://github.com/user-attachments/assets/04c51d4b-1059-4e85-8b24-f0132a51fa8b" />
