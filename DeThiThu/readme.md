@@ -189,6 +189,7 @@ def Contrast_Stretching(im_1):
 - Mục đích : giúp làm rõ chi tiết từng vùng trong ảnh, thích hợp cho các ảnh phức tạp hoặc độ tương phản không đồng đều.
 - Công thức:
 <img width="491" height="171" alt="image" src="https://github.com/user-attachments/assets/eda318bb-af34-4873-9230-2f1a19da8a40" />
+
 - Trong đó:
   - `sk` : giá trị pixel mới ứng với mức xám k
   - `nj` : số lượng pixel có mức xám j trong vùng
